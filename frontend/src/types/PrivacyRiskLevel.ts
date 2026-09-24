@@ -1,3 +1,8 @@
-export const PrivacyRiskLevel = ["LOW","MEDIUM","HIGH","CRITICAL"] as const;
-export type PrivacyRiskLevel = (typeof PrivacyRiskLevel)[number];
-export const PrivacyRiskLevelText: Record<PrivacyRiskLevel, string> = Object.fromEntries(PrivacyRiskLevel.map((value) => [value, value.replace(/_/g, " ")])) as Record<PrivacyRiskLevel, string>;
+/**
+ * 枚举类型聚合位置之一（类型侧）。
+ * 值与文案的权威定义在 constants/PrivacyRiskLevel.ts，其它模块统一从 constants 取值。
+ */
+export type {
+  PrivacyRiskLevel,
+  PrivacyRiskLevelText as PrivacyRiskLevelTextMap
+} from "../constants/PrivacyRiskLevel";

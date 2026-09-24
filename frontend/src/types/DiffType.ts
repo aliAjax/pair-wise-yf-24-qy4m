@@ -1,3 +1,6 @@
-export const DiffType = ["ADDED","REMOVED","MODIFIED","MOVED","UNCHANGED"] as const;
-export type DiffType = (typeof DiffType)[number];
-export const DiffTypeText: Record<DiffType, string> = Object.fromEntries(DiffType.map((value) => [value, value.replace(/_/g, " ")])) as Record<DiffType, string>;
+/**
+ * 枚举类型聚合位置之一（类型侧）。
+ * 值与文案的权威定义在 constants/DiffType.ts，其它模块统一从 constants 取值，
+ * 实体模型从这里取类型，形成“枚举多模块重复定义”的耦合面。
+ */
+export type { DiffType, DiffTypeText as DiffTypeTextMap } from "../constants/DiffType";

@@ -6,13 +6,15 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview --host 0.0.0.0"
+    "preview": "vite preview --host 0.0.0.0",
+    "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
     "vue": "^3.4.38",
+    "vue-router": "^4.4.3",
     "pinia": "^2.2.2",
     "element-plus": "^2.8.1",
-    "echarts": "^5.5.1"
+    "@element-plus/icons-vue": "^2.2.32"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.1.2",

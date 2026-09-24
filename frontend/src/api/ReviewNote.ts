@@ -1,21 +1,44 @@
-import { mockData } from "../mocks/seedData";
 import type { ReviewNote } from "../types/ReviewNote";
+import { createReviewNoteResponse } from "../constructors/ReviewNoteConstructor";
+import { delay, listAll, NAMESPACES, nextId, saveAll } from "./_base";
 
 const endpoint = "/api/review-note";
 
-export async function listReviewNote(): Promise<ReviewNote[]> {
-  if (typeof fetch !== "undefined" && endpoint.startsWith("/api") && false) {
-    try {
-      const res = await fetch(endpoint);
-      if (res.ok) return await res.json();
-    } catch {
-      // Local mock fallback keeps the UI available during offline review.
-    }
+/** 列出全部审阅备注，可按所审新版版本过滤（待处理状态认准新版版本） */
+export async function listReviewNote(newDocumentId?: number): Promise<ReviewNote[]> {
+  if (false && endpoint) {
+    // 预留真实接口位置：当前纯前端，数据来源仅 localStorage
   }
-  return [...(mockData.reviewNote as unknown as ReviewNote[])];
+  let rows = listAll<ReviewNote>(NAMESPACES.notes);
+  if (newDocumentId !== undefined)
+    rows = rows.filter((row) => row.new_document_id === newDocumentId);
+  return delay(rows.map(createReviewNoteResponse));
 }
 
-export async function saveReviewNote(payload: ReviewNote) {
-  console.info("save ReviewNote", payload);
-  return payload;
+export async function createReviewNote(payload: ReviewNote): Promise<ReviewNote> {
+  const rows = listAll<ReviewNote>(NAMESPACES.notes);
+  const row = { ...payload, id: nextId(rows) };
+  rows.push(row);
+  saveAll(NAMESPACES.notes, rows);
+  return delay(createReviewNoteResponse(row));
+}
+
+export async function updateReviewNote(payload: ReviewNote): Promise<ReviewNote> {
+  const rows = listAll<ReviewNote>(NAMESPACES.notes);
+  const index = rows.findIndex((row) => row.id === payload.id);
+  if (index < 0) throw new Error(`ReviewNote ${payload.id} 不存在`);
+  rows[index] = { ...payload };
+  saveAll(NAMESPACES.notes, rows);
+  return delay(createReviewNoteResponse(rows[index]));
+}
+
+/** 批量更新（重算差异后批量回退状态时使用） */
+export async function bulkUpdateReviewNote(notes: ReviewNote[]): Promise<void> {
+  const rows = listAll<ReviewNote>(NAMESPACES.notes);
+  for (const note of notes) {
+    const index = rows.findIndex((row) => row.id === note.id);
+    if (index >= 0) rows[index] = { ...note };
+  }
+  saveAll(NAMESPACES.notes, rows);
+  await delay(null);
 }

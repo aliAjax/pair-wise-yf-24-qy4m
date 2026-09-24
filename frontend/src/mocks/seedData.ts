@@ -1,112 +1,105 @@
-export const mockData = {
-  "policyDocument": [
-    {
-      "id": 1,
-      "title": "title 1",
-      "version_label": "version label 1",
-      "raw_text": "raw text 1",
-      "normalized_sections": "normalized sections 1",
-      "imported_at": "2026-06-11T09:00:00Z"
-    },
-    {
-      "id": 2,
-      "title": "title 2",
-      "version_label": "version label 2",
-      "raw_text": "raw text 2",
-      "normalized_sections": "normalized sections 2",
-      "imported_at": "2026-06-12T09:00:00Z"
-    },
-    {
-      "id": 3,
-      "title": "title 3",
-      "version_label": "version label 3",
-      "raw_text": "raw text 3",
-      "normalized_sections": "normalized sections 3",
-      "imported_at": "2026-06-13T09:00:00Z"
-    }
-  ],
-  "policySection": [
-    {
-      "id": 1,
-      "document_id": 1,
-      "section_no": "section no 1",
-      "heading": "heading 1",
-      "content": "content 1",
-      "category": "REMOVED",
-      "risk_level": "LOW"
-    },
-    {
-      "id": 2,
-      "document_id": 2,
-      "section_no": "section no 2",
-      "heading": "heading 2",
-      "content": "content 2",
-      "category": "MODIFIED",
-      "risk_level": "MEDIUM"
-    },
-    {
-      "id": 3,
-      "document_id": 3,
-      "section_no": "section no 3",
-      "heading": "heading 3",
-      "content": "content 3",
-      "category": "MOVED",
-      "risk_level": "HIGH"
-    }
-  ],
-  "diffResult": [
-    {
-      "id": 1,
-      "old_document_id": 1,
-      "new_document_id": 1,
-      "section_id": 1,
-      "diff_type": "REMOVED",
-      "summary": "summary 1",
-      "created_at": "2026-06-11T09:00:00Z"
-    },
-    {
-      "id": 2,
-      "old_document_id": 2,
-      "new_document_id": 2,
-      "section_id": 2,
-      "diff_type": "MODIFIED",
-      "summary": "summary 2",
-      "created_at": "2026-06-12T09:00:00Z"
-    },
-    {
-      "id": 3,
-      "old_document_id": 3,
-      "new_document_id": 3,
-      "section_id": 3,
-      "diff_type": "MOVED",
-      "summary": "summary 3",
-      "created_at": "2026-06-13T09:00:00Z"
-    }
-  ],
-  "reviewNote": [
-    {
-      "id": 1,
-      "diff_result_id": 1,
-      "tag": "tag 1",
-      "comment": "comment 1",
-      "reviewer": "reviewer 1",
-      "status": "CONFIRMED"
-    },
-    {
-      "id": 2,
-      "diff_result_id": 2,
-      "tag": "tag 2",
-      "comment": "comment 2",
-      "reviewer": "reviewer 2",
-      "status": "IGNORED"
-    },
-    {
-      "id": 3,
-      "diff_result_id": 3,
-      "tag": "tag 3",
-      "comment": "comment 3",
-      "reviewer": "reviewer 3",
-      "status": "OPEN"
-    }
-  ]
-} as const;
+import type { PolicyDocumentForm } from "../types/PolicyDocument";
+
+/**
+ * 本地 mock 种子：两版隐私政策。
+ * 条款由 usePolicyParser 在首次启动时自动分段，不在此处手写条款以保证
+ * 解析规则、编号识别、风险标注三处行为一致。
+ *
+ * 两版刻意覆盖全部差异类型：
+ *  - 新增：第5条 委托处理与对外提供、第11条 自动化决策、第12条 跨境传输
+ *  - 移除：旧版第7条 Cookie 和同类技术
+ *  - 改写：第2/3/4/10 条（数据收集、共享、保存期限、联系方式）
+ *  - 换序：未成年人保护 旧版第8条 → 新版第6条（内容不变）
+ *  - 未变：引言、用户权利、信息安全（编号因新增条款顺延）
+ */
+
+const OLD_POLICY_TEXT = `1. 引言
+本政策适用于明达科技提供的全部产品与服务。我们深知个人信息对您的重要性，并会尽全力保护您的个人信息安全可靠。
+
+2. 我们如何收集和使用您的个人信息
+在您注册账号时，我们会收集您的手机号码和昵称。在您使用服务过程中，我们会收集您的日志信息，包括访问时间、浏览记录和设备型号。
+
+3. 我们如何共享您的个人信息
+我们不会向任何公司、组织和个人出售您的个人信息。仅在获得您的明确同意后，我们才会与第三方共享您的个人信息。
+
+4. 信息的保存期限
+我们仅在为您提供服务所必需的最短期限内保留您的个人信息。在您注销账号后，我们将在三十日内删除您的个人信息。
+
+5. 您如何管理您的个人信息
+您可以查阅、复制、更正您的个人信息，也可以撤回同意或注销账号。行使上述权利请通过本政策末尾的联系方式与我们联系。
+
+6. 信息安全
+我们采取加密、访问控制等安全措施保护您的个人信息，并在发生安全事件时及时通知您。
+
+7. Cookie 和同类技术
+我们使用 Cookie 记录您的登录状态与偏好设置，您可以通过浏览器设置清除 Cookie。
+
+8. 未成年人个人信息保护
+我们非常重视未成年人的个人信息保护。如果您是不满十四周岁的未成年人，请在监护人陪同下阅读本政策，并在取得监护人同意后使用我们的服务。
+
+9. 联系我们
+如您对本政策有任何疑问，可发送邮件至 privacy@example-old.com 与我们的个人信息保护负责人联系。`;
+
+const NEW_POLICY_TEXT = `1. 引言
+本政策适用于明达科技提供的全部产品与服务。我们深知个人信息对您的重要性，并会尽全力保护您的个人信息安全可靠。
+
+2. 我们如何收集和使用您的个人信息
+在您注册账号时，我们会收集您的手机号码和昵称。在您使用服务过程中，我们会收集您的设备信息、位置信息、访问时间、浏览记录和设备型号。在您使用人脸识别功能时，我们将在取得您单独同意后收集您的面部信息，该等敏感个人信息仅用于身份核验。
+
+3. 我们如何共享您的个人信息
+我们不会向任何公司、组织和个人出售您的个人信息。仅在获得您的明确同意后，我们才会与第三方共享您的个人信息。我们接入的第三方 SDK 清单（包括统计分析 SDK 与支付 SDK）已在附录中公示，合作伙伴仅可在必要范围内处理信息。
+
+4. 信息的保存期限
+我们仅在为您提供服务所必需的最短期限内保留您的个人信息。在您注销账号后，我们将在六十日内删除或匿名化处理您的个人信息；法律法规另有规定的，从其规定。
+
+5. 我们如何委托处理和对外提供您的个人信息
+我们可能委托合作伙伴代为处理部分个人信息，受托方须按照我们的要求处理。任何情况下我们都不会将您的个人信息转让给任何公司、组织和个人，但在合并、收购或破产清算情形下除外。
+
+6. 未成年人个人信息保护
+我们非常重视未成年人的个人信息保护。如果您是不满十四周岁的未成年人，请在监护人陪同下阅读本政策，并在取得监护人同意后使用我们的服务。
+
+7. 您如何管理您的个人信息
+您可以查阅、复制、更正您的个人信息，也可以撤回同意或注销账号。行使上述权利请通过本政策末尾的联系方式与我们联系。
+
+8. 信息安全
+我们采取加密、访问控制等安全措施保护您的个人信息，并在发生安全事件时及时通知您。
+
+9. 联系我们
+如您对本政策有任何疑问，可发送邮件至 privacy@example-new.com 或拨打客服热线 400-000-0000 与我们的个人信息保护负责人联系。
+
+10. 自动化决策与个性化推荐
+我们可能基于您的浏览记录进行自动化决策并向您推送个性化内容。您有权拒绝仅通过自动化决策方式作出的决定，并可以关闭个性化推荐。
+
+11. 个人信息的跨境传输
+在向境外接收方提供您的个人信息前，我们将单独取得您的同意，并按照法律法规要求进行安全评估。`;
+
+// 注：新版第 5/10/11 条的编号在打印文本中按行文给出；
+// 为让“新增条款导致后续编号顺延”真实发生，第 10、11 条在文本中编号为 10、11。
+
+export const seedDocuments: Array<PolicyDocumentForm & { id?: number; imported_at?: string }> = [
+  {
+    title: "明达科技隐私政策",
+    version_label: "2025-v1",
+    raw_text: OLD_POLICY_TEXT
+  },
+  {
+    title: "明达科技隐私政策",
+    version_label: "2026-v2",
+    raw_text: NEW_POLICY_TEXT
+  }
+];
+
+/**
+ * 种子审阅备注：针对旧版→新版对比中“保存期限”条款的一条已解决记录。
+ * 首次启动重算差异时新版内容已变化（三十日→六十日），该结论会自动回到待处理，
+ * 历史记录继续留档，用于演示“认准所审新版版本”的状态回退机制。
+ */
+export const seedReviewNotes = [
+  {
+    section_no: "4",
+    tag: "NEED_LEGAL" as const,
+    comment: "旧版注销后三十日删除的安排已经过法务确认，结论：已解决。",
+    reviewer: "法务-王敏",
+    stale: true
+  }
+];

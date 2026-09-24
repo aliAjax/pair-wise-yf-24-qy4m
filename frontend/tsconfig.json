@@ -1,20 +1,18 @@
 {
   "compilerOptions": {
     "target": "ES2021",
+    "useDefineForClassFields": true,
     "module": "ESNext",
     "moduleResolution": "Node",
     "strict": true,
+    "skipLibCheck": true,
+    "noUnusedLocals": false,
     "jsx": "preserve",
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "lib": [
-      "ES2021",
-      "DOM"
-    ]
+    "lib": ["ES2021", "DOM", "DOM.Iterable"],
+    "types": ["vite/client"]
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.vue"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue"]
 }

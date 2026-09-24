@@ -1,15 +1,36 @@
 import type { PolicySection } from "../types/PolicySection";
 
-export const createDefaultPolicySection = (overrides: Partial<PolicySection> = {}): PolicySection => ({
-  id: 1 as never,
-  document_id: 1 as never,
-  section_no: "section no 1" as never,
-  heading: "heading 1" as never,
-  content: "content 1" as never,
-  category: "REMOVED" as never,
-  risk_level: "LOW" as never,
-  ...overrides
-});
+/** 默认条款段落 */
+export function createDefaultPolicySection(
+  overrides: Partial<PolicySection> = {}
+): PolicySection {
+  return {
+    id: 0,
+    document_id: 0,
+    section_no: "",
+    heading: "",
+    content: "",
+    category: "GENERAL",
+    risk_level: "LOW",
+    risk_reason: "",
+    order_path: [0],
+    content_hash: "",
+    ...overrides
+  };
+}
 
-export const createPolicySectionForm = createDefaultPolicySection;
-export const createPolicySectionResponse = createDefaultPolicySection;
+/** 条款编辑表单对象（风险标注页使用） */
+export function createPolicySectionForm(
+  section: PolicySection
+): Pick<PolicySection, "risk_level" | "category" | "risk_reason"> {
+  return {
+    risk_level: section.risk_level,
+    category: section.category,
+    risk_reason: section.risk_reason
+  };
+}
+
+/** API 响应对象 */
+export function createPolicySectionResponse(row: PolicySection): PolicySection {
+  return { ...row };
+}

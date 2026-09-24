@@ -1,3 +1,5 @@
-export const ReviewStatus = ["OPEN","CONFIRMED","IGNORED","RESOLVED"] as const;
-export type ReviewStatus = (typeof ReviewStatus)[number];
-export const ReviewStatusText: Record<ReviewStatus, string> = Object.fromEntries(ReviewStatus.map((value) => [value, value.replace(/_/g, " ")])) as Record<ReviewStatus, string>;
+/**
+ * 枚举类型聚合位置之一（类型侧）。
+ * 值与文案的权威定义在 constants/ReviewStatus.ts，其它模块统一从 constants 取值。
+ */
+export type { ReviewStatus, ReviewStatusText as ReviewStatusTextMap } from "../constants/ReviewStatus";
