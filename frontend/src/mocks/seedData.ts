@@ -1,112 +1,38 @@
-export const mockData = {
-  "policyDocument": [
-    {
-      "id": 1,
-      "title": "title 1",
-      "version_label": "version label 1",
-      "raw_text": "raw text 1",
-      "normalized_sections": "normalized sections 1",
-      "imported_at": "2026-06-11T09:00:00Z"
-    },
-    {
-      "id": 2,
-      "title": "title 2",
-      "version_label": "version label 2",
-      "raw_text": "raw text 2",
-      "normalized_sections": "normalized sections 2",
-      "imported_at": "2026-06-12T09:00:00Z"
-    },
-    {
-      "id": 3,
-      "title": "title 3",
-      "version_label": "version label 3",
-      "raw_text": "raw text 3",
-      "normalized_sections": "normalized sections 3",
-      "imported_at": "2026-06-13T09:00:00Z"
-    }
-  ],
-  "policySection": [
-    {
-      "id": 1,
-      "document_id": 1,
-      "section_no": "section no 1",
-      "heading": "heading 1",
-      "content": "content 1",
-      "category": "REMOVED",
-      "risk_level": "LOW"
-    },
-    {
-      "id": 2,
-      "document_id": 2,
-      "section_no": "section no 2",
-      "heading": "heading 2",
-      "content": "content 2",
-      "category": "MODIFIED",
-      "risk_level": "MEDIUM"
-    },
-    {
-      "id": 3,
-      "document_id": 3,
-      "section_no": "section no 3",
-      "heading": "heading 3",
-      "content": "content 3",
-      "category": "MOVED",
-      "risk_level": "HIGH"
-    }
-  ],
-  "diffResult": [
-    {
-      "id": 1,
-      "old_document_id": 1,
-      "new_document_id": 1,
-      "section_id": 1,
-      "diff_type": "REMOVED",
-      "summary": "summary 1",
-      "created_at": "2026-06-11T09:00:00Z"
-    },
-    {
-      "id": 2,
-      "old_document_id": 2,
-      "new_document_id": 2,
-      "section_id": 2,
-      "diff_type": "MODIFIED",
-      "summary": "summary 2",
-      "created_at": "2026-06-12T09:00:00Z"
-    },
-    {
-      "id": 3,
-      "old_document_id": 3,
-      "new_document_id": 3,
-      "section_id": 3,
-      "diff_type": "MOVED",
-      "summary": "summary 3",
-      "created_at": "2026-06-13T09:00:00Z"
-    }
-  ],
-  "reviewNote": [
-    {
-      "id": 1,
-      "diff_result_id": 1,
-      "tag": "tag 1",
-      "comment": "comment 1",
-      "reviewer": "reviewer 1",
-      "status": "CONFIRMED"
-    },
-    {
-      "id": 2,
-      "diff_result_id": 2,
-      "tag": "tag 2",
-      "comment": "comment 2",
-      "reviewer": "reviewer 2",
-      "status": "IGNORED"
-    },
-    {
-      "id": 3,
-      "diff_result_id": 3,
-      "tag": "tag 3",
-      "comment": "comment 3",
-      "reviewer": "reviewer 3",
-      "status": "OPEN"
-    }
-  ]
-} as const;
+import type { PolicyDocumentForm } from "../constructors/PolicyDocumentConstructor";
+
+/**
+ * 本地示例数据：一旧一新两版隐私政策。
+ * 两版之间刻意包含：内容一致（一）、改写（二、保存）、
+ * 相对顺序移动（共享）、新增（Cookie）、移除（信息的使用），
+ * 便于首次启动即可体验完整对比流程。
+ */
+export const seedDocuments: PolicyDocumentForm[] = [
+  {
+    title: "隐私政策",
+    version_label: "v1.0 旧版",
+    raw_text: `一、引言与适用范围
+本隐私政策适用于我们提供的全部产品与服务。请您在使用前仔细阅读本政策，尤其是以加粗形式标注的条款。
+二、我们收集的信息
+我们收集您主动提供的注册信息，包括手机号码、昵称，以及您在使用服务过程中产生的日志信息。
+三、信息的使用
+我们使用收集的信息为您提供基本服务，包括账号登录、内容展示和客户服务。
+四、信息的共享
+我们不会向第三方共享您的个人信息，法律法规另有规定的除外。
+五、信息的保存
+我们仅在为您提供服务所必需的期间内保存您的个人信息，保存期限不超过六个月。`
+  },
+  {
+    title: "隐私政策",
+    version_label: "v2.0 新版",
+    raw_text: `一、引言与适用范围
+本隐私政策适用于我们提供的全部产品与服务。请您在使用前仔细阅读本政策，尤其是以加粗形式标注的条款。
+二、我们收集的信息
+我们收集您主动提供的注册信息，包括手机号码、昵称、设备标识符，以及您在使用服务过程中产生的日志信息和Cookie记录。
+三、信息的保存
+我们仅在为您提供服务所必需的期间内保存您的个人信息，保存期限不超过三年。
+四、信息的共享
+我们不会向第三方共享您的个人信息，法律法规另有规定的除外。
+五、Cookie与同类技术
+我们使用Cookie和同类技术识别您的登录状态，记录您的偏好设置，并进行流量统计。`
+  }
+];
